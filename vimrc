@@ -1,0 +1,1 @@
+/home/yuki/dot_files/vimrc
