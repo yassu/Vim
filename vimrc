@@ -24,8 +24,9 @@ NeoBundle 'Shougo/vimproc', {
 \       'windows' : 'make -f make_mingw32.mak',
 \       'cygwin'  : 'make -f make_cygwin.mak',
 \       'mac'     : 'make -f make_mac.mak',
-\       'unix'    : 'make -f make_unix.mak',
+\       'unix'    : 'make -f make_unix.mak'
 \ }}
+
 NeoBundle 'Shougo/neocomplete'
 NeoBundle 'Shougo/neomru.vim'
 NeoBundle 'Shougo/neosnippet-snippets' 
@@ -33,13 +34,13 @@ NeoBundle 'Shougo/neosnippet.vim'
 NeoBundle 'Shougo/unite-outline'
 NeoBundle 'Shougo/unite.vim'
 NeoBundle 'Shougo/vimfiler'
+NeoBundle 'w0ng/vim-hybrid'
 NeoBundle 'Shougo/vimshell.vim'
 NeoBundle 'fuenor/qfixhowm.git'
 NeoBundle 'kana/vim-smartinput'
 NeoBundle 'kana/vim-textobj-entire'
 NeoBundle 'kana/vim-textobj-user'
 NeoBundle 'mattn/excitetranslate-vim'
-NeoBundle 'hattya/python_fold.vim'
 NeoBundle 'mattn/webapi-vim'
 NeoBundle 'natw/vim-pythontextobj'
 NeoBundle 'rcmdnk/vim-markdown' 
@@ -48,7 +49,6 @@ NeoBundle 'thinca/vim-quickrun'
 NeoBundle 'thinca/vim-ref'
 NeoBundle 'thinca/vim-textobj-between'
 NeoBundle 'tpope/vim-abolish'
-NeoBundle 'nathanaelkane/vim-indent-guides'
 NeoBundle 'tpope/vim-fugitive'
 NeoBundle 'tpope/vim-speeddating'
 NeoBundle 'tpope/vim-surround'
@@ -56,12 +56,13 @@ NeoBundle 'tyru/caw.vim'
 NeoBundle 'tyru/open-browser.vim'
 NeoBundle 'vim-jp/vimdoc-ja'
 NeoBundle 'vim-scripts/Align'
+NeoBundle 'scrooloose/syntastic'
 
 """ Setting for Plugins
 "" ALign
 let g:Align_xstrlen = 3 " for japanese environment"
 
-""" neocomplete
+""" NeoComplete
 " Disable AutoComplPop.
 let g:acp_enableAtStartup = 0
 " Use neocomplete.
@@ -69,7 +70,7 @@ let g:neocomplete#enable_at_startup = 1
 " Use smartcase.
 let g:neocomplete#enable_smart_case = 1
 " Set minimum syntax keyword length.
-let g:neocomplete#sources#syntax#min_keyword_length = 4
+let g:neocomplete#sources#syntax#min_keyword_length = 3
 let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
 
 " Define dictionary.
@@ -104,7 +105,8 @@ inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
 inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
 inoremap <expr><C-y>  neocomplete#close_popup()
 inoremap <expr><C-e>  neocomplete#cancel_popup()
-
+" Close popup by <Space>.
+"inoremap <expr><Space> pumvisible() ? neocomplete#close_popup() : "\<Space>"
 " Enable omni completion.
 autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
 autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
@@ -119,24 +121,22 @@ endif
 if !exists('g:neocomplete#force_omni_input_patterns')
   let g:neocomplete#force_omni_input_patterns = {}
 endif
-"let g:neocomplete#sources#omni#input_patterns.php =
-"\ '[^. \t]->\%(\h\w*\)\?\|\h\w*::\%(\h\w*\)\?'
-"let g:neocomplete#sources#omni#input_patterns.c =
-"\ '[^.[:digit:] *\t]\%(\.\|->\)\%(\h\w*\)\?'
-"let g:neocomplete#sources#omni#input_patterns.cpp =
-"\ '[^.[:digit:] *\t]\%(\.\|->\)\%(\h\w*\)\?\|\h\w*::\%(\h\w*\)\?'
 
 " For perlomni.vim setting.
 " https://github.com/c9s/perlomni.vim
 let g:neocomplete#sources#omni#input_patterns.perl =
 \ '[^. \t]->\%(\h\w*\)\?\|\h\w*::\%(\h\w*\)\?'
-let g:neocomplete#enable_fuzzy_completion = 0
 
 " For smart TAB completion.
-"inoremap <expr><TAB>  pumvisible() ? "\<C-n>" :
-"        \ <SID>check_back_space() ? "\<TAB>" :
-"        \ neocomplete#start_manual_complete()
+inoremap <expr><TAB>  pumvisible() ? "\<C-n>" :
+        \ <SID>check_back_space() ? "\<TAB>" :
+        \ neocomplete#start_manual_complete()
+  function! s:check_back_space() "
+    let col = col('.') - 1
+    return !col || getline('.')[col - 1]  =~ '\s'
+  endfunction"
 
+""" neosnippet
 let g:neosnippet#snippets_directory='~/.vim/snippets/'
 imap <c-k> <Plug>(neosnippet_expand_or_jump)
 smap <c-k> <Plug>(neosnippet_expand_or_jump)
@@ -144,21 +144,26 @@ xmap <c-k> <Plug><Plug>(neosnippet_expand_target)
 
 " Super tab like snippets behavior
 imap <expr><tab> neosnippet#expandable_or_jumpable() ?
-\   "\<Plug>(neosnippet_expand_or_jump)"
-\:  pumvisible()? "<c-n>": "\<tab>"
+\ "\<Plug>(neosnippet_expand_or_jump)"
+\: pumvisible()? "<c-n>": "\<tab>"
 smap <expr><tab> neosnippet#expandable_or_jumpable() ?
-\   "\<Plug>(neosnippet_expand_or_jump)"
-\:  "\<tab>"
+\ "\<Plug>(neosnippet_expand_or_jump)"
+\: "\<tab>"
 " for snippet_complete marker
 if has("conceal")
-    set conceallevel=2 
+    set conceallevel=2
 endif
+
+" use head match for neocomplete
+let g:neocomplete#enable_fuzzy_completion = 0
 
 """ Quickrun
 let g:quickrun_config = {}
 let g:quickrun_config['python'] = {
 \   'command': 'python3'
 \ }
+
+
 
 """ comment
 " <Leader>cでコメントアウトと解除を行う
@@ -199,7 +204,10 @@ let QFixHowm_DiaryFile = 'diary/%Y/%m/%Y-%m-%d.markdown'
 helptags ~/.vim/bundle/vimdoc-ja/doc
 
 """ カラースキーム
-colorscheme evening
+colorscheme elflord
+
+""" syntastic
+let g:syntastic_python_checkers = ['pep8']
 
 """ 基本setting
 filetype plugin indent on
