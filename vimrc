@@ -182,6 +182,8 @@ vmap <Leader>c <Plug>(caw:i:toggle)
 """ nerdtree
 "" <Leader>NでNerdTreeを表示
 nnoremap <Leader>N :NERDTree<cr>
+"" 隠しファイルをデフォルトで表示
+let NERDTreeShowHidden = 1
 
 """ unite
 " ,umで最近開いたファイルを表示
