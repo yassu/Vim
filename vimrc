@@ -28,15 +28,15 @@ NeoBundle 'Shougo/vimproc', {
 \ }}
 
 NeoBundle 'Shougo/neocomplete'
+NeoBundle 'nicoraffo/conque'
+NeoBundle 'vim-scripts/vim-auto-save'
 NeoBundle 'Shougo/neomru.vim'
 NeoBundle 'Shougo/neosnippet-snippets' 
 NeoBundle 'Shougo/neosnippet.vim' 
 NeoBundle 'Shougo/unite-outline'
 NeoBundle 'Shougo/unite.vim'
 NeoBundle 'Shougo/vimfiler'
-NeoBundle 'w0ng/vim-hybrid'
 NeoBundle 'Shougo/vimshell.vim'
-NeoBundle 'fuenor/qfixhowm.git'
 NeoBundle 'kana/vim-smartinput'
 NeoBundle 'kana/vim-textobj-entire'
 NeoBundle 'kana/vim-textobj-user'
@@ -61,6 +61,9 @@ NeoBundle 'scrooloose/syntastic'
 """ Setting for Plugins
 "" ALign
 let g:Align_xstrlen = 3 " for japanese environment"
+
+""" auto-save
+let g:auto_save = 1
 
 """ NeoComplete
 " Disable AutoComplPop.
@@ -157,13 +160,39 @@ endif
 " use head match for neocomplete
 let g:neocomplete#enable_fuzzy_completion = 0
 
-""" Quickrun
+""" Quickrun{{{
 let g:quickrun_config = {}
 let g:quickrun_config['python'] = {
-\   'command': 'python3'
+\   'command': 'python3',
+\   'exec':    ['%o %c %s', 'pep8 %s']
 \ }
 
+" test用の設定
+" testからはじまるpythonファイルをテストコードとする 
+autocmd BufWinEnter,BufNewFile test*.py set filetype=python.test
+autocmd BufWinEnter,BufNewFile *test.py set filetype=python.test
 
+" quickrun.vim 用設定 
+let g:quickrun_config['python.test'] = {'command': 'nosetests3', 'exec': ['%c -v %s']}
+" }}}
+
+""" Conque {{{
+let g:ConqueTerm_ReadUnfocused = 1
+let g:ConqueTerm_CloseOnEnd = 1
+let g:ConqueTerm_StartMessages = 0
+let g:ConqueTerm_CWInsert = 1
+noremap <silent><Space>sh :ConqueTermTab zsh<cr>
+noremap <silent><Space>vsh :ConqueTermVSplit zsh<cr>
+noremap <silent><Space>py :ConqueTermTab ipython3<cr>
+noremap <silent><Space>vpy :ConqueTermVSplit ipython3<cr>
+ 
+function! s:delete_ConqueTerm(buffer_name)
+    let term_obj = conque_term#get_instance(a:buffer_name)
+    call term_obj.close()
+endfunction
+autocmd BufWinLeave zsh\s-\s? call <SID>delete_ConqueTerm(expand('%'))
+nnoremap <Space>vsh :ConqueTermVSplit zsh
+""" }}}
 
 """ comment
 " <Leader>cでコメントアウトと解除を行う
@@ -173,6 +202,8 @@ vmap <Leader>c <Plug>(caw:i:toggle)
 """ nerdtree
 "" <Leader>NでNerdTreeを表示
 nnoremap <Leader>N :NERDTree<cr>
+"" 隠しファイルをデフォルトで表示
+let NERDTreeShowHidden=1
 
 """ unite
 " ,umで最近開いたファイルを表示
@@ -193,31 +224,22 @@ nnoremap <space>gb :Gblame<cr>
 """ excitetranslate (translate)
 nnoremap <silent>& :<c-u>ExciteTranslate<cr>
 
-""" qfixhowm (memo)
-let howm_dir             = '~/Dropbox/memo'
-let howm_filename        = '%Y/%m/%Y-%m-%d.markdown'
-let howm_fileencoding    = 'utf-8'
-let howm_fileformat      = 'unix'
-let QFixHowm_DiaryFile = 'diary/%Y/%m/%Y-%m-%d.markdown'
-
 """ vimdoc-ja
 helptags ~/.vim/bundle/vimdoc-ja/doc
 
 """ カラースキーム
 colorscheme evening
 
-""" syntastic
-let g:syntastic_python_checkers = ['pep8']
-
 """ 基本setting
 filetype plugin indent on
 filetype plugin on
 filetype indent on
 syntax on
+set clipboard=unnamedplus
 
-"" 矢印キーは使わない
-nnoremap <LEFT>  <NOP>
-nnoremap <RIGHT> <NOP>
+"" 矢印キー
+nnoremap <LEFT>  :tabnext<cr>
+nnoremap <RIGHT> :tabprevious<cr>
 nnoremap <UP>    <NOP>
 nnoremap <DOWN>  <NOP>
 
@@ -245,8 +267,6 @@ autocmd BufWinEnter *? silent loadview
 runtime macros/matchit.vim
 runtime macros/editexisting.vim
 
-"" 表示設定
-
 " 行番号を表示
 set number      
 
@@ -259,6 +279,12 @@ endif
 set tabstop=4
 set softtabstop=4
 set shiftwidth=4
+
+"" statusbarの設定
+" 常にstatuslineを表示する
+set laststatus=2
+" formatの設定
+set statusline=%F%m%r%h%w\ [TYPE=%Y]\ [POS=%04l,%04v][%p%%]
 
 " multibyte文字の間に空白を挿入しない
 " set formatoptions+=mM   
@@ -281,9 +307,6 @@ set nrformats =
 " 上下に三文字ずつ表示させる.
 set scrolloff=3
 
-" ステータスラインにgitのbranchを表示
-set statusline=%<%f\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
-
 " vimscriptではfoldの方法はmarker
 autocmd FileType vim set foldmethod=marker
 
@@ -304,7 +327,8 @@ vmap <leader>* :<C-u>call <SID>VSetSearch()<CR>:execute 'noautocmd vimgrep /' . 
 nnoremap <c-\> :tabnew<cr>
 
 " <Leader>.で.vimrcを開く
-nnoremap <leader>. :tabnew ~/.vimrc
+nnoremap <leader>. :tabnew ~/.vimrc<cr>
+nnoremap <Leader>? :source ~/.vimrc<cr>
 
 """ <c-c>で次の行に移動してnormalmodeに
 nnoremap <silent><c-c> o<esc>
@@ -338,6 +362,52 @@ nnoremap g* g*zz
 nnoremap g# g#zz
 nnoremap G Gzz
 
+""" Tabの設定
+" Anywhere SID.
+function! s:SID_PREFIX()
+  return matchstr(expand('<sfile>'), '<SNR>\d\+_\zeSID_PREFIX$')
+endfunction
+
+" Set tabline.
+function! s:my_tabline()  "{{{
+  let s = ''
+  for i in range(1, tabpagenr('$'))
+    let bufnrs = tabpagebuflist(i)
+    let bufnr = bufnrs[tabpagewinnr(i) - 1]  " first window, first appears
+    let no = i  " display 0-origin tabpagenr.
+    let mod = getbufvar(bufnr, '&modified') ? '!' : ' '
+    let title = fnamemodify(bufname(bufnr), ':t')
+    let title = '[' . title . ']'
+    let s .= '%'.i.'T'
+    let s .= '%#' . (i == tabpagenr() ? 'TabLineSel' : 'TabLine') . '#'
+    let s .= no . ':' . title
+    let s .= mod
+    let s .= '%#TabLineFill# '
+  endfor
+  let s .= '%#TabLineFill#%T%=%#TabLine#'
+  return s
+endfunction "}}}
+let &tabline = '%!'. s:SID_PREFIX() . 'my_tabline()'
+set showtabline=2 " 常にタブラインを表示
+
+" The prefix key.
+nnoremap    [Tag]   <Nop>
+nmap    t [Tag]
+" Tab jump
+for n in range(1, 9)
+  execute 'nnoremap <silent> [Tag]'.n  ':<C-u>tabnext'.n.'<CR>'
+endfor
+" t1 で1番左のタブ、t2 で1番左から2番目のタブにジャンプ
+
+map <silent> [Tag]c :tablast <bar> tabnew<CR>
+" tc 新しいタブを一番右に作る
+map <silent> [Tag]x :tabclose<CR>
+" tx タブを閉じる
+map <silent> [Tag]n :tabnext<CR>
+" tn 次のタブ
+map <silent> [Tag]p :tabprevious<CR>
+" tp 前のタブ
+
 """ 今開いているディレクトリをroot dirに
 command! Cd :cd %:h
-command! CdSnip :cd ~/.vim/bundle/
+command! CdSnip :cd ~/.vim/snippets/
