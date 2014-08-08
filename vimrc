@@ -209,6 +209,10 @@ let NERDTreeShowHidden=1
 " ,umで最近開いたファイルを表示
 nnoremap <silent> ,um :<c-u>Unite file_mru<cr>
 
+""" memo
+" <Space>mでメモを開く
+nnoremap <Space>m :tabnew ~/Dropbox/memo.markdown<cr>
+
 """ openbrowser
 nmap <Leader>w <Plug>(openbrowser-open)
 
@@ -279,6 +283,10 @@ endif
 set tabstop=4
 set softtabstop=4
 set shiftwidth=4
+" tex形式では2文字分
+autocmd FileType tex set tabstop=2
+autocmd FileType tex set softtabstop=2
+autocmd FileType tex set shiftwidth=2
 
 "" statusbarの設定
 " 常にstatuslineを表示する
