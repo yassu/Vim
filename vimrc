@@ -250,44 +250,51 @@ filetype indent on
 syntax on
 set clipboard=unnamedplus
 
-"" 矢印キー
+"" 矢印キー {{{
 nnoremap <LEFT>  :tabnext<cr>
 nnoremap <RIGHT> :tabprevious<cr>
 nnoremap <UP>    <NOP>
 nnoremap <DOWN>  <NOP>
+"" }}}
 
 " Backspaceでなんでも消せる
 set backspace=indent,eol,start
 
-""" filetypeの変更
+""" filetypeの変更 {{{
 autocmd BufNewFile,BufRead *.tex  setfiletype tex
 autocmd BufNewFile,BufRead *.sage setfiletype python
 autocmd BufNewFile,BufRead *.markdown setfiletype markdown
+""" }}}
 
 """ Work Flowのファイルを表示
 command! Flow :e ~/Dropbox/flow.markdown
 
-""" backupをとらない
+""" backupをとらない {{{
 set nowritebackup
 set nobackup
 set noswapfile
+""" }}}
 
-" 終了するときにファイル情報を保存する
+" 終了するときにファイル情報を保存する {{{
 autocmd BufWinLeave *? silent mkview
 autocmd BufWinEnter *? silent loadview
+" }}}
 
-" "%"の拡張
+" "%"の拡張 {{{
 runtime macros/matchit.vim
 runtime macros/editexisting.vim
+" }}}
 
 " 行番号を表示
 set number      
 
-" makeファイルで無ければ,タブを展開
+" makeファイルで無ければ,タブを展開 {{{
 if expand("%") != "Makefile"
     set expandtab
 endif
+" }}}
 
+" Tab文字の設定 {{{
 " Tabは4文字文の空白とする
 set tabstop=4
 set softtabstop=4
@@ -296,22 +303,22 @@ set shiftwidth=4
 autocmd FileType tex set tabstop=2
 autocmd FileType tex set softtabstop=2
 autocmd FileType tex set shiftwidth=2
+" }}}
 
-"" statusbarの設定
+"" statusbarの設定 {{{
 " 常にstatuslineを表示する
 set laststatus=2
 " formatの設定
 set statusline=%F%m%r%h%w\ [TYPE=%Y]\ [POS=%04l,%04v][%p%%]
-
-" multibyte文字の間に空白を挿入しない
-" set formatoptions+=mM   
+"" }}}
 
 " 行の長さは80文字以内
 set textwidth=80        
-
-""" 賢いインデント
+ 
+""" 賢いインデント {{{
 set autoindent
 set smartindent
+""" }}}
 "" commentを自動で挿入しない
 set formatoptions-=r
 
@@ -327,7 +334,7 @@ set scrolloff=3
 " vimscriptではfoldの方法はmarker
 autocmd FileType vim set foldmethod=marker
 
-" 文字のサーチの拡張
+" 文字のサーチの拡張 {{{
 function! s:VSetSearch(cmdtype)
   let temp = @s
   norm! gv"sy
@@ -339,18 +346,20 @@ xnoremap * :<C-u>call <SID>VSetSearch('/')<CR>/<C-R>=@/<CR><CR>
 xnoremap # :<C-u>call <SID>VSetSearch('?')<CR>?<C-R>=@/<CR><CR>
 nmap <leader>* :execute 'noautocmd vimgrep /\V' . substitute(escape(expand("<cword>"), '\'), '\n', '\\n', 'g') . '/ **'<CR>
 vmap <leader>* :<C-u>call <SID>VSetSearch()<CR>:execute 'noautocmd vimgrep /' . @/ . '/ **'<CR>
+" }}}
 
 " <c-\>で新しいTabを開く
 nnoremap <c-\> :tabnew<cr>
 
-" <Leader>.で.vimrcを開く
+" vimrcの使い勝手をよくする {{{
 nnoremap <leader>. :tabnew ~/.vimrc<cr>
 nnoremap <Leader>? :source ~/.vimrc<cr>
+" }}}
 
 """ <c-c>で次の行に移動してnormalmodeに
 nnoremap <silent><c-c> o<esc>
 
-""" 文字列削除のためのコマンドのmap
+""" 文字列削除のためのコマンドのmap {{{
 nnoremap <silent>c_ ct_
 nnoremap <silent>d_ dt_
 nnoremap <silent>c) ct)
@@ -368,9 +377,9 @@ nnoremap <silent>c. ct.
 nnoremap <silent>d\ d$
 nnoremap <silent>c$ d$a
 nnoremap <silent>c\ c$
+""" }}}
 
-
-""" 検索などで飛んだら,そこを真ん中に
+""" 検索などで飛んだら,そこを真ん中に {{{
 nnoremap n nzz
 nnoremap N Nzz
 nnoremap * *zz
@@ -378,6 +387,7 @@ nnoremap # #zz
 nnoremap g* g*zz
 nnoremap g# g#zz
 nnoremap G Gzz
+""" }}}
 
 """ memo {{{
 " <Space>mでメモを開く
