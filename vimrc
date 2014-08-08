@@ -1,3 +1,5 @@
+""" Plugins {{{
+""  NeoBundle {{{
 set nocompatible               " Be iMproved
 filetype off                   " Required!
 
@@ -16,9 +18,9 @@ if neobundle#exists_not_installed_bundles()
   echomsg 'Please execute ":NeoBundleInstall" command.'
               "finish
 endif
+"" }}}
 
-""" Installation
-
+""  Installation {{{
 NeoBundle 'Shougo/vimproc', {
 \   'build': {
 \       'windows' : 'make -f make_mingw32.mak',
@@ -57,15 +59,16 @@ NeoBundle 'tyru/open-browser.vim'
 NeoBundle 'vim-jp/vimdoc-ja'
 NeoBundle 'vim-scripts/Align'
 NeoBundle 'scrooloose/syntastic'
+"" }}}
 
-""" Setting for Plugins
+""  Setting for Plugins {{{
 "" ALign
 let g:Align_xstrlen = 3 " for japanese environment"
 
-""" auto-save
+"" auto-save
 let g:auto_save = 1
 
-""" NeoComplete
+""  NeoComplete {{{
 " Disable AutoComplPop.
 let g:acp_enableAtStartup = 0
 " Use neocomplete.
@@ -137,9 +140,10 @@ inoremap <expr><TAB>  pumvisible() ? "\<C-n>" :
   function! s:check_back_space() "
     let col = col('.') - 1
     return !col || getline('.')[col - 1]  =~ '\s'
-  endfunction"
+  endfunction
+""}}}
 
-""" neosnippet
+""  neosnippet {{{
 let g:neosnippet#snippets_directory='~/.vim/snippets/'
 imap <c-k> <Plug>(neosnippet_expand_or_jump)
 smap <c-k> <Plug>(neosnippet_expand_or_jump)
@@ -158,9 +162,9 @@ if has("conceal")
 endif
 
 " use head match for neocomplete
-let g:neocomplete#enable_fuzzy_completion = 0
+let g:neocomplete#enable_fuzzy_completion = 0"}}}
 
-""" Quickrun{{{
+"" Quickrun {{{
 let g:quickrun_config = {}
 let g:quickrun_config['python'] = {
 \   'command': 'python3',
@@ -174,16 +178,18 @@ autocmd BufWinEnter,BufNewFile *test.py set filetype=python.test
 
 " quickrun.vim 用設定 
 let g:quickrun_config['python.test'] = {'command': 'nosetests3', 'exec': ['%c -v %s']}
-" }}}
+"" }}}
 
-""" Conque {{{
+"" Conque {{{
 let g:ConqueTerm_ReadUnfocused = 1
 let g:ConqueTerm_CloseOnEnd = 1
 let g:ConqueTerm_StartMessages = 0
 let g:ConqueTerm_CWInsert = 1
 noremap <silent><Space>sh :ConqueTermTab zsh<cr>
+noremap <silent><Space>tsh :ConqueTermTab zsh<cr>
 noremap <silent><Space>vsh :ConqueTermVSplit zsh<cr>
 noremap <silent><Space>py :ConqueTermTab ipython3<cr>
+noremap <silent><Space>tpy :ConqueTermTab ipython3<cr>
 noremap <silent><Space>vpy :ConqueTermVSplit ipython3<cr>
  
 function! s:delete_ConqueTerm(buffer_name)
@@ -192,31 +198,31 @@ function! s:delete_ConqueTerm(buffer_name)
 endfunction
 autocmd BufWinLeave zsh\s-\s? call <SID>delete_ConqueTerm(expand('%'))
 nnoremap <Space>vsh :ConqueTermVSplit zsh
-""" }}}
+"" }}}
 
-""" comment
+"" comment {{{
 " <Leader>cでコメントアウトと解除を行う
 nmap <Leader>c <Plug>(caw:i:toggle)
 vmap <Leader>c <Plug>(caw:i:toggle)
+"" }}}
 
-""" nerdtree
-"" <Leader>NでNerdTreeを表示
+"" {{{ nerdtree
+" <Leader>NでNerdTreeを表示
 nnoremap <Leader>N :NERDTree<cr>
-"" 隠しファイルをデフォルトで表示
+" 隠しファイルをデフォルトで表示
 let NERDTreeShowHidden=1
+"" }}}
 
-""" unite
+"" unite {{{
 " ,umで最近開いたファイルを表示
 nnoremap <silent> ,um :<c-u>Unite file_mru<cr>
+"" }}}
 
-""" memo
-" <Space>mでメモを開く
-nnoremap <Space>m :tabnew ~/Dropbox/memo.markdown<cr>
 
 """ openbrowser
 nmap <Leader>w <Plug>(openbrowser-open)
 
-""" Git 
+"" Git {{{
 nnoremap <space>ga :Gdiff<cr>
 nnoremap <space>gs :Gstatus<cr>
 nnoremap <space>gl :Glog<cr>
@@ -224,12 +230,15 @@ nnoremap <space>ga :Gwrite<cr>
 nnoremap <space>gc :Gcommit<cr>
 nnoremap <space>gC :Git commit --amend<cr>
 nnoremap <space>gb :Gblame<cr>
+" }}}
 
 """ excitetranslate (translate)
 nnoremap <silent>& :<c-u>ExciteTranslate<cr>
 
 """ vimdoc-ja
 helptags ~/.vim/bundle/vimdoc-ja/doc
+""" }}}
+""" }}}
 
 """ カラースキーム
 colorscheme evening
@@ -370,7 +379,12 @@ nnoremap g* g*zz
 nnoremap g# g#zz
 nnoremap G Gzz
 
-""" Tabの設定
+""" memo {{{
+" <Space>mでメモを開く
+nnoremap <Space>m :tabnew ~/Dropbox/memo.markdown<cr>
+""" }}}
+
+""" Tabの設定 {{{
 " Anywhere SID.
 function! s:SID_PREFIX()
   return matchstr(expand('<sfile>'), '<SNR>\d\+_\zeSID_PREFIX$')
@@ -415,6 +429,7 @@ map <silent> [Tag]n :tabnext<CR>
 " tn 次のタブ
 map <silent> [Tag]p :tabprevious<CR>
 " tp 前のタブ
+""" }}}
 
 """ 今開いているディレクトリをroot dirに
 command! Cd :cd %:h
