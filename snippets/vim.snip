@@ -1,0 +1,17 @@
+snippet if
+alias   \if
+	if ${1:#:condition}
+		${0:#:code}
+	endif
+
+snippet for
+alias \for
+    for ${1:item} in ${2:list}
+        ${0:#:code}
+    endfor
+
+snippet func
+alias \function
+	function! ${1:#:funcname}
+		${0:#:code}
+	endfunction

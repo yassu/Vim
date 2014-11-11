@@ -1,0 +1,56 @@
+snippet     main
+abbr        main(int argc, char const* argv[] ... )
+    int main(int argc, char const* argv[]){
+        ${0}    
+    }
+
+snippet     def
+abbr        #ifndef ...
+options     head
+    #ifndef ${1: #NAME}
+    #define $1
+    ${0}
+
+    #endif // #ifndef $1
+
+snippet if
+abbr        if(...)
+    if(${1}){
+        ${2}    
+    }
+
+snippet for
+abbr        for(...;...;...)
+    for(${1}; ${2}; ${3}){
+        ${0}    
+    }
+
+snippet while
+abbr        while(...;...;...)
+    while(${1}){
+        ${0}
+    }
+
+snippet     class
+abbr        class {}
+    class ${1:#:name} {
+        ${0}
+    }
+
+snippet     cl
+abbr        class {}
+    class ${1:#:name} {
+        ${0}
+    }
+
+snippet     brk
+abbr        block statement
+    ${1} {
+        ${2}    
+    }
+
+snippet     brock
+abbr        block statement
+    ${1} {
+        ${2}    
+    }

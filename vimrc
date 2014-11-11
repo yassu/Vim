@@ -18,9 +18,9 @@ if neobundle#exists_not_installed_bundles()
   echomsg 'Please execute ":NeoBundleInstall" command.'
               "finish
 endif
-"" }}}
+" }}}
 
-""  Installation {{{
+"  Installation {{{
 NeoBundle 'Shougo/vimproc', {
 \   'build': {
 \       'windows' : 'make -f make_mingw32.mak',
@@ -29,122 +29,154 @@ NeoBundle 'Shougo/vimproc', {
 \       'unix'    : 'make -f make_unix.mak'
 \ }}
 
-NeoBundle 'Shougo/neocomplete'
+" NeoBundle 'Shougo/neocomplete'
+NeoBundle 'rhysd/committia.vim'
 NeoBundle 'nicoraffo/conque'
+NeoBundle 'Yggdroot/indentLine'
+NeoBundle 'osyo-manga/vim-reanimate'
+NeoBundle 'payneseu/YankRing'
+NeoBundle 'tpope/vim-fugitive'
+NeoBundle 'bronson/vim-trailing-whitespace'
+NeoBundle 'yuratomo/w3m.vim'
+NeoBundle 'deris/vim-fitcolumn'
+NeoBundle 'vim-scripts/taglist.vim'
+NeoBundle 'vim-scripts/vcscommand.vim'
+NeoBundle 'mhaig/vim-blockdiag-series'
 NeoBundle 'vim-scripts/vim-auto-save'
-NeoBundle 'Shougo/neomru.vim'
-NeoBundle 'Shougo/neosnippet-snippets' 
-NeoBundle 'Shougo/neosnippet.vim' 
-NeoBundle 'Shougo/unite-outline'
-NeoBundle 'Shougo/unite.vim'
+NeoBundle 'Shougo/neosnippet-snippets'
+NeoBundle 'Shougo/neosnippet.vim'
 NeoBundle 'Shougo/vimfiler'
-NeoBundle 'Shougo/vimshell.vim'
+NeoBundle 'nvie/vim-flake8'
+NeoBundle 'Shougo/unite.vim'
+NeoBundle 'Shougo/neomru.vim'
+NeoBundle 'yegappan/mru'
 NeoBundle 'kana/vim-smartinput'
+NeoBundle 'kana/vim-operator-user'
 NeoBundle 'kana/vim-textobj-entire'
 NeoBundle 'kana/vim-textobj-user'
 NeoBundle 'mattn/excitetranslate-vim'
+NeoBundle 'bps/vim-textobj-python'
 NeoBundle 'mattn/webapi-vim'
-NeoBundle 'natw/vim-pythontextobj'
-NeoBundle 'rcmdnk/vim-markdown' 
+NeoBundle 'plasticboy/vim-markdown'
+NeoBundle 'kannokanno/previm'
 NeoBundle 'scrooloose/nerdtree'
 NeoBundle 'thinca/vim-quickrun'
 NeoBundle 'thinca/vim-ref'
 NeoBundle 'thinca/vim-textobj-between'
 NeoBundle 'tpope/vim-abolish'
-NeoBundle 'tpope/vim-fugitive'
-NeoBundle 'tpope/vim-speeddating'
 NeoBundle 'tpope/vim-surround'
 NeoBundle 'tyru/caw.vim'
 NeoBundle 'tyru/open-browser.vim'
 NeoBundle 'vim-jp/vimdoc-ja'
 NeoBundle 'vim-scripts/Align'
-NeoBundle 'scrooloose/syntastic'
-"" }}}
+NeoBundle 'yassu/todo-env.vim'
+" }}}
 
 ""  Setting for Plugins {{{
 "" ALign
 let g:Align_xstrlen = 3 " for japanese environment"
 
+" This is default key mapping
+imap <C-k>  <Plug>(fitcolumn-abovecolumn)
+
+" w3m
+nnoremap <Leader>w :W3m<Space>
+let g:w3m#homepage="http://www.google.co.jp/"
+
+
+"" VimFiler
+nnoremap <Leader>f :VimFiler<cr>
+
 "" auto-save
 let g:auto_save = 1
 
-""  NeoComplete {{{
-" Disable AutoComplPop.
-let g:acp_enableAtStartup = 0
-" Use neocomplete.
-let g:neocomplete#enable_at_startup = 1
-" Use smartcase.
-let g:neocomplete#enable_smart_case = 1
-" Set minimum syntax keyword length.
-let g:neocomplete#sources#syntax#min_keyword_length = 3
-let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
+" reanimate
+command! -nargs=1 SaveS :ReanimateSave <args>
+command! -nargs=1 LoadS :ReanimateLoad <args>
 
-" Define dictionary.
-let g:neocomplete#sources#dictionary#dictionaries = {
-    \ 'default' : '',
-    \ 'vimshell' : $HOME.'/.vimshell_hist',
-    \ 'scheme' : $HOME.'/.gosh_completions'
-    \ }
+" previm
+let g:previm_enable_realtime=1
+autocmd FileType markdown nnoremap <buffer> <Leader>P :PrevimOpen<cr>
 
-" Define keyword.
-if !exists('g:neocomplete#keyword_patterns')
-    let g:neocomplete#keyword_patterns = {}
-endif
-let g:neocomplete#keyword_patterns['default'] = '\h\w*'
+" flake8
+autocmd FileType python command! FK :call Flake8()<cr>
 
-" Plugin key-mappings.
-inoremap <expr><C-g>     neocomplete#undo_completion()
-inoremap <expr><C-l>     neocomplete#complete_common_string()
-
-" Recommended key-mappings.
-" <CR>: close popup and save indent.
-inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-function! s:my_cr_function()
-  return neocomplete#close_popup() . "\<CR>"
-  " For no inserting <CR> key.
-  "return pumvisible() ? neocomplete#close_popup() : "\<CR>"
-endfunction
-" <TAB>: completion.
-inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
-" <C-h>, <BS>: close popup and delete backword char.
-inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
-inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
-inoremap <expr><C-y>  neocomplete#close_popup()
-inoremap <expr><C-e>  neocomplete#cancel_popup()
-" Close popup by <Space>.
-"inoremap <expr><Space> pumvisible() ? neocomplete#close_popup() : "\<Space>"
-" Enable omni completion.
-autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-
-" Enable heavy omni completion.
-if !exists('g:neocomplete#sources#omni#input_patterns')
-  let g:neocomplete#sources#omni#input_patterns = {}
-endif
-if !exists('g:neocomplete#force_omni_input_patterns')
-  let g:neocomplete#force_omni_input_patterns = {}
-endif
-
-" For perlomni.vim setting.
-" https://github.com/c9s/perlomni.vim
-let g:neocomplete#sources#omni#input_patterns.perl =
-\ '[^. \t]->\%(\h\w*\)\?\|\h\w*::\%(\h\w*\)\?'
-
-" For smart TAB completion.
-inoremap <expr><TAB>  pumvisible() ? "\<C-n>" :
-        \ <SID>check_back_space() ? "\<TAB>" :
-        \ neocomplete#start_manual_complete()
-  function! s:check_back_space() "
-    let col = col('.') - 1
-    return !col || getline('.')[col - 1]  =~ '\s'
-  endfunction
-""}}}
-
-""  neosnippet {{{
-let g:neosnippet#snippets_directory='~/.vim/snippets/'
+" ""  NeoComplete {{{
+" " Disable AutoComplPop.
+" let g:acp_enableAtStartup = 0
+" " Use neocomplete.
+" let g:neocomplete#enable_at_startup = 1
+" " Use smartcase.
+" let g:neocomplete#enable_smart_case = 1
+" " Set minimum syntax keyword length.
+" let g:neocomplete#sources#syntax#min_keyword_length = 3
+" let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
+"
+" " Define dictionary.
+" let g:neocomplete#sources#dictionary#dictionaries = {
+"     \ 'default' : '',
+"     \ 'vimshell' : $HOME.'/.vimshell_hist',
+"     \ 'scheme' : $HOME.'/.gosh_completions'
+"     \ }
+"
+" " Define keyword.
+" if !exists('g:neocomplete#keyword_patterns')
+"     let g:neocomplete#keyword_patterns = {}
+" endif
+" let g:neocomplete#keyword_patterns['default'] = '\h\w*'
+"
+" " Plugin key-mappings.
+" inoremap <expr><C-g>     neocomplete#undo_completion()
+" inoremap <expr><C-l>     neocomplete#complete_common_string()
+"
+" " Recommended key-mappings.
+" " <CR>: close popup and save indent.
+" inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+" function! s:my_cr_function()
+"   return neocomplete#close_popup() . "\<CR>"
+"   " For no inserting <CR> key.
+"   "return pumvisible() ? neocomplete#close_popup() : "\<CR>"
+" endfunction
+" " <TAB>: completion.
+" inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+" " <C-h>, <BS>: close popup and delete backword char.
+" inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
+" inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
+" inoremap <expr><C-y>  neocomplete#close_popup()
+" inoremap <expr><C-e>  neocomplete#cancel_popup()
+" " Close popup by <Space>.
+" "inoremap <expr><Space> pumvisible() ? neocomplete#close_popup() : "\<Space>"
+" " Enable omni completion.
+" autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+" autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+" autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+" autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+" autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+"
+" " Enable heavy omni completion.
+" if !exists('g:neocomplete#sources#omni#input_patterns')
+"   let g:neocomplete#sources#omni#input_patterns = {}
+" endif
+" if !exists('g:neocomplete#force_omni_input_patterns')
+"   let g:neocomplete#force_omni_input_patterns = {}
+" endif
+"
+" " For perlomni.vim setting.
+" " https://github.com/c9s/perlomni.vim
+" let g:neocomplete#sources#omni#input_patterns.perl =
+" \ '[^. \t]->\%(\h\w*\)\?\|\h\w*::\%(\h\w*\)\?'
+"
+" " For smart TAB completion.
+" inoremap <expr><TAB>  pumvisible() ? "\<C-n>" :
+"         \ <SID>check_back_space() ? "\<TAB>" :
+"         \ neocomplete#start_manual_complete()
+"   function! s:check_back_space() "
+"     let col = col('.') - 1
+"     return !col || getline('.')[col - 1]  =~ '\s'
+"   endfunction
+" ""}}}
+"
+" ""  neosnippet {{{
 imap <c-k> <Plug>(neosnippet_expand_or_jump)
 smap <c-k> <Plug>(neosnippet_expand_or_jump)
 xmap <c-k> <Plug><Plug>(neosnippet_expand_target)
@@ -161,23 +193,49 @@ if has("conceal")
     set conceallevel=2
 endif
 
-" use head match for neocomplete
-let g:neocomplete#enable_fuzzy_completion = 0"}}}
+" " use head match for neocomple
+let g:neosnippet#disable_runtime_snippets = {'_': 1}
+let g:neosnippet#enable_snipmate_compatibility = 1
+let g:neosnippet#snippets_directory='~/.vim/snippets/'
+let g:neocomplete#enable_fuzzy_completion = 0 "}}}
 
 "" Quickrun {{{
 let g:quickrun_config = {}
-let g:quickrun_config['python'] = {
-\   'command': 'python3',
-\   'exec':    ['%o %c %s', 'pep8 %s']
-\ }
 
-" test用の設定
+" pythonのtest用の設定
 " testからはじまるpythonファイルをテストコードとする 
 autocmd BufWinEnter,BufNewFile test*.py set filetype=python.test
 autocmd BufWinEnter,BufNewFile *test.py set filetype=python.test
 
+" task file
+nnoremap <Leader>t :e ~/WorkSpace/todo<cr>
+autocmd BufWinEnter,BufNewFile todo set filetype=todo
+let g:todo_env_fold_child = 0
+let g:todo_env_date_format = "%Y/%m/%d %H:%M"
+
+" 全体の設定
+let g:quickrun_config = {
+\   "_": {
+\       "runner": "vimproc",
+\   }
+\}
+
 " quickrun.vim 用設定 
-let g:quickrun_config['python.test'] = {'command': 'nosetests3', 'exec': ['%c -v %s']}
+let g:quickrun_config['python.test'] = {'command': 'nosetests', 'exec': ['%c -v %s']}
+let g:quickrun_config['python'] = {'command': 'python3'}
+
+" blockdiag
+let g:quickrun_config['blockdiag'] = {
+            \'command': 'blockdiag',
+            \'exec': ['%c -a %s -o %{expand("%:r")}.png', 'display %{expand("%:r")}.png'],
+            \'outputter':'message',
+            \}
+
+let g:quickrun_config['tex'] = {
+            \'command': 'platex',
+            \'exec': ['%c %s && dvipdfmx %{expand("%:r").dvi && evince'],
+            \'outputter': 'message'
+            \}
 "" }}}
 
 "" Conque {{{
@@ -237,6 +295,7 @@ nnoremap <silent>& :<c-u>ExciteTranslate<cr>
 
 """ vimdoc-ja
 helptags ~/.vim/bundle/vimdoc-ja/doc
+autocmd FileType help nnoremap <buffer> q :q<cr>
 """ }}}
 """ }}}
 
@@ -249,6 +308,7 @@ filetype plugin on
 filetype indent on
 syntax on
 set clipboard=unnamedplus
+
 
 "" 矢印キー {{{
 nnoremap <LEFT>  :tabnext<cr>
@@ -264,6 +324,7 @@ set backspace=indent,eol,start
 autocmd BufNewFile,BufRead *.tex  setfiletype tex
 autocmd BufNewFile,BufRead *.sage setfiletype python
 autocmd BufNewFile,BufRead *.markdown setfiletype markdown
+autocmd BufNewFile,BufRead *.diag setfiletype blockdiag
 """ }}}
 
 """ Work Flowのファイルを表示
@@ -286,12 +347,12 @@ runtime macros/editexisting.vim
 " }}}
 
 " 行番号を表示
-set number      
+set number
 
-" makeファイルで無ければ,タブを展開 {{{
-if expand("%") != "Makefile"
-    set expandtab
-endif
+
+" expandtab
+set expandtab
+
 " }}}
 
 " Tab文字の設定 {{{
@@ -299,10 +360,6 @@ endif
 set tabstop=4
 set softtabstop=4
 set shiftwidth=4
-" tex形式では2文字分
-autocmd FileType tex set tabstop=2
-autocmd FileType tex set softtabstop=2
-autocmd FileType tex set shiftwidth=2
 " }}}
 
 "" statusbarの設定 {{{
@@ -312,9 +369,7 @@ set laststatus=2
 set statusline=%F%m%r%h%w\ [TYPE=%Y]\ [POS=%04l,%04v][%p%%]
 "" }}}
 
-" 行の長さは80文字以内
-set textwidth=80        
- 
+
 """ 賢いインデント {{{
 set autoindent
 set smartindent
@@ -330,9 +385,6 @@ set nrformats =
 
 " 上下に三文字ずつ表示させる.
 set scrolloff=3
-
-" vimscriptではfoldの方法はmarker
-autocmd FileType vim set foldmethod=marker
 
 " 文字のサーチの拡張 {{{
 function! s:VSetSearch(cmdtype)
@@ -352,8 +404,8 @@ vmap <leader>* :<C-u>call <SID>VSetSearch()<CR>:execute 'noautocmd vimgrep /' . 
 nnoremap <c-\> :tabnew<cr>
 
 " vimrcの使い勝手をよくする {{{
-nnoremap <leader>. :tabnew ~/.vimrc<cr>
-nnoremap <Leader>? :source ~/.vimrc<cr>
+nnoremap <leader>. :tabnew ~/dotfiles/vimrc<cr>
+nnoremap <Leader>? :source ~/dotfiles/vimrc<cr>
 " }}}
 
 """ <c-c>で次の行に移動してnormalmodeに
@@ -400,6 +452,7 @@ function! s:SID_PREFIX()
   return matchstr(expand('<sfile>'), '<SNR>\d\+_\zeSID_PREFIX$')
 endfunction
 
+
 " Set tabline.
 function! s:my_tabline()  "{{{
   let s = ''
@@ -441,6 +494,17 @@ map <silent> [Tag]p :tabprevious<CR>
 " tp 前のタブ
 """ }}}
 
+"" 縦分割でhelpを表示
+nnoremap <Space>h :<c-u>vertical help<Space>
+
+""" view new line
+set list
+set listchars=eol:<
+
 """ 今開いているディレクトリをroot dirに
 command! Cd :cd %:h
 command! CdSnip :cd ~/.vim/snippets/
+set shell=/bin/bash
+
+set conceallevel=0
+

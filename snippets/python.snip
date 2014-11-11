@@ -1,0 +1,96 @@
+snippet #!
+abbr    #!/usr/bin/env python3
+    #!/usr/bin/env python3
+
+snippet "3
+abbr """ ... """
+    """
+    ${0}
+    ""
+
+snippet forr
+abbr    for ... in range(...):...
+    for ${1:i} in range(${2:9}):
+        ${0:code}
+
+snippet     def
+abbr        def function(...): """..."""
+options     head
+	def ${1:#:name}(${2}):
+		${0:TARGET}
+
+snippet     defd
+abbr        def function(...): """..."""
+options     head
+	def ${1:#:name}(${2}):
+		""" ${3:#:function documentation} """
+		${0:TARGET}
+
+snippet     defm
+abbr        def method(self, ...): ...
+options     head
+	def ${1:#:name}(self, ${2}):
+        """ ${3:# class documentation}"""
+		${0:TARGET}
+
+snippet     for
+abbr        for ... in ...: ...
+options     head
+	for ${1:#:value} in ${2:#:list}:
+		${0:TARGET}
+
+snippet     if
+abbr        if ...: ...
+options     head
+	if ${1:#:condition}:
+		${0:TARGET}
+
+snippet     elif
+abbr        elif ...: ...
+options     head
+	elif ${1:#:condition}:
+		${0}
+
+snippet     else
+abbr        else: ...
+options     head
+	else:
+		${0}
+
+snippet     while
+abbr        while ...: ...
+options     head
+	while ${1:#:condition}:
+		${0:TARGET}
+
+snippet     ifmain
+abbr        if __name__ == '__main__': ...
+options     head
+	if __name__ == '__main__':
+		${0:TARGET}
+
+snippet     cl
+abbr        class Class(...): ...
+options     head
+	class ${1:#:name}(${2:object}):
+
+snippet     todo
+abbr        # todo: ...
+    # todo: ${1}
+
+snippet     until
+abbr        # todo: until
+    # todo: until
+
+snippet     ret
+abbr        # return ...
+    return ${1}
+
+snippet     return
+abbr        # return ...
+    return ${1}
+    
+snippet from
+abbr        from (...) import ...
+    from ${1} import ${2}
+
