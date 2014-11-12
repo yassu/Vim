@@ -32,15 +32,20 @@ NeoBundle 'Shougo/vimproc', {
 " NeoBundle 'Shougo/neocomplete'
 NeoBundle 'rhysd/committia.vim'
 NeoBundle 'nicoraffo/conque'
+NeoBundle 'cohama/agit.vim'
 NeoBundle 'Yggdroot/indentLine'
 NeoBundle 'osyo-manga/vim-reanimate'
 NeoBundle 'payneseu/YankRing'
-NeoBundle 'tpope/vim-fugitive'
 NeoBundle 'bronson/vim-trailing-whitespace'
 NeoBundle 'yuratomo/w3m.vim'
 NeoBundle 'deris/vim-fitcolumn'
 NeoBundle 'vim-scripts/taglist.vim'
 NeoBundle 'vim-scripts/vcscommand.vim'
+command! VAdd :VCSAdd<cr>
+command! VDiff :VCSDiff<cr>
+command! VStatus :VCSStatus<cr>
+command! VLog :VCSLog<cr>
+command! VCommit :VCSCommit<cr>
 NeoBundle 'mhaig/vim-blockdiag-series'
 NeoBundle 'vim-scripts/vim-auto-save'
 NeoBundle 'Shougo/neosnippet-snippets'
@@ -50,7 +55,7 @@ NeoBundle 'nvie/vim-flake8'
 NeoBundle 'Shougo/unite.vim'
 NeoBundle 'Shougo/neomru.vim'
 NeoBundle 'yegappan/mru'
-NeoBundle 'kana/vim-smartinput'
+" NeoBundle 'kana/vim-smartinput'
 NeoBundle 'kana/vim-operator-user'
 NeoBundle 'kana/vim-textobj-entire'
 NeoBundle 'kana/vim-textobj-user'
@@ -279,16 +284,6 @@ nnoremap <silent> ,um :<c-u>Unite file_mru<cr>
 
 """ openbrowser
 nmap <Leader>w <Plug>(openbrowser-open)
-
-"" Git {{{
-nnoremap <space>ga :Gdiff<cr>
-nnoremap <space>gs :Gstatus<cr>
-nnoremap <space>gl :Glog<cr>
-nnoremap <space>ga :Gwrite<cr>
-nnoremap <space>gc :Gcommit<cr>
-nnoremap <space>gC :Git commit --amend<cr>
-nnoremap <space>gb :Gblame<cr>
-" }}}
 
 """ excitetranslate (translate)
 nnoremap <silent>& :<c-u>ExciteTranslate<cr>
