@@ -29,7 +29,6 @@ NeoBundle 'Shougo/vimproc', {
 \       'unix'    : 'make -f make_unix.mak'
 \ }}
 
-" NeoBundle 'Shougo/neocomplete'
 NeoBundle 'rhysd/committia.vim'
 NeoBundle 'nicoraffo/conque'
 NeoBundle 'cohama/agit.vim'
@@ -55,7 +54,7 @@ NeoBundle 'nvie/vim-flake8'
 NeoBundle 'Shougo/unite.vim'
 NeoBundle 'Shougo/neomru.vim'
 NeoBundle 'yegappan/mru'
-" NeoBundle 'kana/vim-smartinput'
+NeoBundle 'kana/vim-smartinput'
 NeoBundle 'kana/vim-operator-user'
 NeoBundle 'kana/vim-textobj-entire'
 NeoBundle 'kana/vim-textobj-user'
@@ -98,6 +97,7 @@ let g:auto_save = 1
 " reanimate
 command! -nargs=1 SaveS :ReanimateSave <args>
 command! -nargs=1 LoadS :ReanimateLoad <args>
+command! -nargs=0 ListS :Unite reanimate
 
 " previm
 let g:previm_enable_realtime=1
@@ -106,81 +106,6 @@ autocmd FileType markdown nnoremap <buffer> <Leader>P :PrevimOpen<cr>
 " flake8
 autocmd FileType python command! FK :call Flake8()<cr>
 
-" ""  NeoComplete {{{
-" " Disable AutoComplPop.
-" let g:acp_enableAtStartup = 0
-" " Use neocomplete.
-" let g:neocomplete#enable_at_startup = 1
-" " Use smartcase.
-" let g:neocomplete#enable_smart_case = 1
-" " Set minimum syntax keyword length.
-" let g:neocomplete#sources#syntax#min_keyword_length = 3
-" let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
-"
-" " Define dictionary.
-" let g:neocomplete#sources#dictionary#dictionaries = {
-"     \ 'default' : '',
-"     \ 'vimshell' : $HOME.'/.vimshell_hist',
-"     \ 'scheme' : $HOME.'/.gosh_completions'
-"     \ }
-"
-" " Define keyword.
-" if !exists('g:neocomplete#keyword_patterns')
-"     let g:neocomplete#keyword_patterns = {}
-" endif
-" let g:neocomplete#keyword_patterns['default'] = '\h\w*'
-"
-" " Plugin key-mappings.
-" inoremap <expr><C-g>     neocomplete#undo_completion()
-" inoremap <expr><C-l>     neocomplete#complete_common_string()
-"
-" " Recommended key-mappings.
-" " <CR>: close popup and save indent.
-" inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-" function! s:my_cr_function()
-"   return neocomplete#close_popup() . "\<CR>"
-"   " For no inserting <CR> key.
-"   "return pumvisible() ? neocomplete#close_popup() : "\<CR>"
-" endfunction
-" " <TAB>: completion.
-" inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
-" " <C-h>, <BS>: close popup and delete backword char.
-" inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
-" inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
-" inoremap <expr><C-y>  neocomplete#close_popup()
-" inoremap <expr><C-e>  neocomplete#cancel_popup()
-" " Close popup by <Space>.
-" "inoremap <expr><Space> pumvisible() ? neocomplete#close_popup() : "\<Space>"
-" " Enable omni completion.
-" autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-" autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-" autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-" autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-" autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-"
-" " Enable heavy omni completion.
-" if !exists('g:neocomplete#sources#omni#input_patterns')
-"   let g:neocomplete#sources#omni#input_patterns = {}
-" endif
-" if !exists('g:neocomplete#force_omni_input_patterns')
-"   let g:neocomplete#force_omni_input_patterns = {}
-" endif
-"
-" " For perlomni.vim setting.
-" " https://github.com/c9s/perlomni.vim
-" let g:neocomplete#sources#omni#input_patterns.perl =
-" \ '[^. \t]->\%(\h\w*\)\?\|\h\w*::\%(\h\w*\)\?'
-"
-" " For smart TAB completion.
-" inoremap <expr><TAB>  pumvisible() ? "\<C-n>" :
-"         \ <SID>check_back_space() ? "\<TAB>" :
-"         \ neocomplete#start_manual_complete()
-"   function! s:check_back_space() "
-"     let col = col('.') - 1
-"     return !col || getline('.')[col - 1]  =~ '\s'
-"   endfunction
-" ""}}}
-"
 " ""  neosnippet {{{
 imap <c-k> <Plug>(neosnippet_expand_or_jump)
 smap <c-k> <Plug>(neosnippet_expand_or_jump)
@@ -304,12 +229,11 @@ filetype indent on
 syntax on
 set clipboard=unnamedplus
 
-
 "" 矢印キー {{{
 nnoremap <LEFT>  :tabnext<cr>
 nnoremap <RIGHT> :tabprevious<cr>
-nnoremap <UP>    <NOP>
-nnoremap <DOWN>  <NOP>
+nnoremap <UP>    :cprevious<cr>
+nnoremap <DOWN>  :cnext<cr>
 "" }}}
 
 " Backspaceでなんでも消せる
@@ -343,7 +267,6 @@ runtime macros/editexisting.vim
 
 " 行番号を表示
 set number
-
 
 " expandtab
 set expandtab
@@ -399,7 +322,7 @@ vmap <leader>* :<C-u>call <SID>VSetSearch()<CR>:execute 'noautocmd vimgrep /' . 
 nnoremap <c-\> :tabnew<cr>
 
 " vimrcの使い勝手をよくする {{{
-nnoremap <leader>. :tabnew ~/dotfiles/vimrc<cr>
+nnoremap <leader>. :e      ~/dotfiles/vimrc<cr>
 nnoremap <Leader>? :source ~/dotfiles/vimrc<cr>
 " }}}
 
@@ -502,4 +425,3 @@ command! CdSnip :cd ~/.vim/snippets/
 set shell=/bin/bash
 
 set conceallevel=0
-
